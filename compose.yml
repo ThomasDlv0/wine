@@ -2,7 +2,7 @@ name: wine
 services:
   web:
     image: nginx:stable
-    container_name: nginx
+    container_name: nginx-stable
     ports:
       - "8080:80"
     volumes:
@@ -15,7 +15,7 @@ services:
 
   php:
     build: ./docker/php
-    container_name: php-fpm
+    container_name: php-8.4
     volumes:
       - ./wine:/var/www/html
     networks:
@@ -23,10 +23,10 @@ services:
 
   db:
     image: mysql:8.0
-    container_name: mysql
+    container_name: mysql-8.0
     environment:
       MYSQL_DATABASE: wine_db
-      MYSQL_USER: root
+      MYSQL_USER: wine_user
       MYSQL_PASSWORD: password
       MYSQL_ROOT_PASSWORD: root
     volumes:
