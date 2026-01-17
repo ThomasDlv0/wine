@@ -1,0 +1,43 @@
+name: wine
+services:
+  web:
+    image: nginx:stable
+    container_name: nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - ./wine:/var/www/html
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php
+    networks:
+      - php-network
+
+  php:
+    build: ./docker/php
+    container_name: php-fpm
+    volumes:
+      - ./wine:/var/www/html
+    networks:
+      - php-network
+
+  db:
+    image: mysql:8.0
+    container_name: mysql
+    environment:
+      MYSQL_DATABASE: wine_db
+      MYSQL_USER: root
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - db-data:/var/lib/mysql:Z
+    ports:
+      - "3306:3306"
+    networks:
+      - php-network
+volumes:
+  db-data:
+
+networks:
+  php-network:
+    driver: bridge
